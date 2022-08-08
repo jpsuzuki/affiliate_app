@@ -40,3 +40,4 @@ yarn-debug.log*
 .keys.env
 .env
 /tmp/access_token
+/sampleMV/
