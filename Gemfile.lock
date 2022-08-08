@@ -77,9 +77,13 @@ GEM
       regexp_parser (>= 1.5, < 3.0)
       xpath (~> 3.2)
     childprocess (4.1.0)
+    chronic (0.10.2)
     concurrent-ruby (1.1.10)
     crass (1.0.6)
+    dotenv (2.7.6)
     erubi (1.10.0)
+    ethon (0.15.0)
+      ffi (>= 1.15.0)
     ffi (1.15.5)
     globalid (1.0.0)
       activesupport (>= 5.0)
@@ -107,6 +111,7 @@ GEM
     nokogiri (1.13.6)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
+    oauth (0.5.10)
     pg (1.4.1)
     public_suffix (4.0.7)
     puma (5.6.4)
@@ -180,6 +185,8 @@ GEM
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
+    typhoeus (1.4.0)
+      ethon (>= 0.9.0)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
     web-console (4.2.0)
@@ -199,6 +206,8 @@ GEM
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
+    whenever (1.0.0)
+      chronic (>= 0.6.3)
     xpath (3.2.0)
       nokogiri (~> 1.8)
     zeitwerk (2.6.0)
@@ -210,8 +219,11 @@ DEPENDENCIES
   bootsnap (>= 1.4.4)
   byebug
   capybara (>= 3.26)
+  dotenv
   jbuilder (~> 2.7)
   listen (~> 3.3)
+  nokogiri
+  oauth
   pg (~> 1.1)
   puma (~> 5.0)
   rack-mini-profiler (~> 2.0)
@@ -220,13 +232,15 @@ DEPENDENCIES
   selenium-webdriver (>= 4.0.0.rc1)
   spring
   turbolinks (~> 5)
+  typhoeus
   tzinfo-data
   web-console (>= 4.1.0)
   webdrivers
   webpacker (~> 5.0)
+  whenever
 
 RUBY VERSION
-   ruby 2.6.5p114
+   ruby 2.7.4p191
 
 BUNDLED WITH
-   2.1.2
+   2.1.4

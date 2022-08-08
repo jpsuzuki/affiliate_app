@@ -37,3 +37,6 @@ yarn-debug.log*
 
 # 追加
 /memo.md
+.keys.env
+.env
+/tmp/access_token
