@@ -1,4 +1,7 @@
 every 10.minute do
-  command "ruby ../exec.rb"
+  rake "task:tweet"
 end
 
+every 10.days do 
+  rake "task:reset"
+end

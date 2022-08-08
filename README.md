@@ -1,24 +1,16 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+```
+$ touch .keys.env
+```
+```
+CONSUMER_KEY="twitter consumer key"
+CONSUMER_SECRET="twitter secret key"
+API_ID="dmm api id"
+AFFILIATE_ID="dmm affiliate id"
+```
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+```
+$ bundle exec whenever
+$ RAILS_ENV=development bundle exec whenever --update-crontab
+```

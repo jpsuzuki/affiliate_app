@@ -108,9 +108,9 @@ def append_options(media_id, mp4size)
   options_array = []
   until total == mp4size
     if segment < 10 
-      chunk = "./sampleMV/chunk0#{segment}"
+      chunk = "/sample_mv_bot/sampleMV/chunk0#{segment}"
     else
-      chunk = "./sampleMV/chunk#{segment}"
+      chunk = "/sample_mv_bot/sampleMV/chunk#{segment}"
     end
     options = {
       :method => :post,
@@ -239,7 +239,20 @@ end
 def mv_tweet(item,media_id)
   create_tweet_url = "https://api.twitter.com/2/tweets"
   tags = ""
-  item["iteminfo"]["actress"].each do |actress|
+  genre = item["iteminfo"]["genre"]
+  if genre.count < 3 && genre.count > 0
+    genre.each do |genre|
+      tag = "##{genre["name"]} "
+      tags += tag
+    end
+  else 
+    for num in 0..2 do 
+      tag = "##{genre[num]["name"]} "
+      tags += tag
+    end
+  end
+  unless item["iteminfo"]["actress"] == nil
+    actress = item["iteminfo"]["actress"][0]
     tag = "##{actress["name"]} "
     tags += tag
   end
@@ -263,4 +276,3 @@ def reply(tweet_id, item, img_id)
   tweet_res = request(create_tweet_url, $oauth_params, tweet_options)
   puts JSON.pretty_generate(JSON.parse(tweet_res.body))
 end
-  

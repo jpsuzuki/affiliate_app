@@ -3,17 +3,14 @@ require 'typhoeus'
 require 'dotenv'
 require 'open-uri'
 require 'nokogiri'
+require 'pstore'
 
-def get_item(int)
-  Dotenv.load('.keys.env')
+def options(offset)
+  Dotenv.load('/sample_mv_bot/.keys.env')
   api_id = ENV['API_ID']
   affiliate_id = ENV['AFFILIATE_ID']
-  api = "https://api.dmm.com/affiliate/v3/ItemList"
-  offset = int
-  sampleMovieURL = nil
-  # mvのあるアイテムになるまで繰り返す（最大5回
-  while sampleMovieURL == nil do
-    req_params = {
+  options = {
+    params: {
       api_id: api_id, 
       affiliate_id: affiliate_id,
       site: "FANZA",
@@ -23,9 +20,25 @@ def get_item(int)
       offset: offset,
       output: "json"
     }
-    request = Typhoeus::Request.new(api,params: req_params)
-    response = request.run
-    item = JSON.parse(response.body)["result"]["items"][0]
+  }
+  return options
+end
+
+def return_item(options)
+  api = "https://api.dmm.com/affiliate/v3/ItemList"
+  request = Typhoeus::Request.new(api,options)
+  response = request.run
+  item = JSON.parse(response.body)["result"]["items"][0]
+  return item
+end
+
+def get_item(int)
+  sampleMovieURL = nil
+  offset = int
+  # mvのあるアイテムになるまで繰り返す（最大5回
+  while sampleMovieURL == nil do
+    options = options(offset)
+    item = return_item(options)
     p item["title"]
     # urlがnilで無ければ変数に代入
     unless item["sampleMovieURL"] == nil
@@ -34,6 +47,10 @@ def get_item(int)
     p sampleMovieURL
     offset += 1
     sleep 1
+  end
+  db = PStore.new("/tmp/try_num")
+  db.transaction do 
+    db["try_num"] = offset
   end
   return item
 end
@@ -48,14 +65,14 @@ def get_sample(item)
   rough = script.match(/\"bitrate\"\:3000\,\"src\"\:\".*\.mp4\"\}\]\,\"affiliate/).to_s
   shave = rough.match(/cc3001.*mp4/).to_s
   mp4url = "https://#{shave}".gsub(/\\/) { '' }
-  `mkdir ./sampleMV`
-  mp4file = "./sampleMV/sampleMV.mp4"
+  `mkdir /sample_mv_bot/sampleMV`
+  mp4file = "/sample_mv_bot/sampleMV/sampleMV.mp4"
   open(mp4file, "wb") do |mp4file| 
     mp4file.print open(mp4url).read
   end
-  `ffmpeg -i ./sampleMV/sampleMV.mp4  -ss 00:00:05 -to 00:02:25 -acodec copy -vcodec copy ./sampleMV/cutMV.mp4`
-  `split -b 4m -d ./sampleMV/cutMV.mp4 ./sampleMV/chunk`
-  imgfile = "./sampleMV/sampleimg.jpg"
+  `ffmpeg -i /sample_mv_bot/sampleMV/sampleMV.mp4  -ss 00:00:05 -to 00:02:25 -acodec copy -vcodec copy /sample_mv_bot/sampleMV/cutMV.mp4`
+  `split -b 4m -d /sample_mv_bot/sampleMV/cutMV.mp4 /sample_mv_bot/sampleMV/chunk`
+  imgfile = "/sample_mv_bot/sampleMV/sampleimg.jpg"
   img = item["sampleImageURL"]["sample_l"]["image"][0]
   open(imgfile, "wb") do |imgfile| 
     imgfile.print open(img).read
